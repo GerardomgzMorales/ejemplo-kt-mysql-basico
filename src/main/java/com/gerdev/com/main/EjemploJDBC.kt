@@ -1,14 +1,11 @@
-package com.gerdev.com
+package com.gerdev.com.main
 
+import com.gerdev.com.util_conect_db.ConnectionDB
 import java.sql.*
 
 class EjemploJDBC {
 
     companion object {
-
-        private const val url = "jdbc:mariadb://localhost:3306/db_spring"
-        private const val userDB = "root"
-        private const val passwordDB = ""
 
         @JvmStatic
         fun connexionBDMaria() {
@@ -16,7 +13,7 @@ class EjemploJDBC {
             var stmt: Statement? = null
             var resultado: ResultSet? = null
             try {
-                conn = DriverManager.getConnection(url, userDB, passwordDB)
+                conn = ConnectionDB.crearConexione()
                 stmt = conn?.createStatement()
 
                 println("\nHola hay una connexion con exito\n")
@@ -40,7 +37,7 @@ class EjemploJDBC {
                 ex.printStackTrace()
                 println(ex.message)
             } finally {
-                resultado?.close();
+                resultado?.close()
                 conn?.close()
                 stmt?.close()
             }
