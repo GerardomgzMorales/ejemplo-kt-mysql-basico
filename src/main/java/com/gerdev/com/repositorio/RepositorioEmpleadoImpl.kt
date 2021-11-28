@@ -38,13 +38,9 @@ class RepositorioEmpleadoImpl : IRepositorioEmpleado<Empleado> {
 
     override fun buscarEmpleado(id: Long): Empleado? {
         return try {
-            val prepareStat: PreparedStatement? =
-                this.connectDB?.prepareStatement("SELECT * FROM  empleados WHERE id_empleado = ?")?.apply {
-                    setLong(1, id)
-                }
-            if (prepareStat != null) {
-                this.result = prepareStat.executeQuery()
-            }
+            this.result = this.connectDB?.prepareStatement("SELECT * FROM  empleados WHERE id_empleado = ?")?.apply {
+                setLong(1, id)
+            }?.executeQuery()
             if (this.result?.next() == true) {
                 valoresResultEmpleado(Empleado())
             } else {
@@ -60,11 +56,42 @@ class RepositorioEmpleadoImpl : IRepositorioEmpleado<Empleado> {
     }
 
     override fun guardar(t: Empleado?): Boolean {
-        TODO("Not yet implemented")
+        val insertSQLEmpleado: String
+        return try {
+            if (t != null) {
+                insertSQLEmpleado = if (t.id != null) {
+                    "UPDATE empleados\n" +
+                            "SET apellido_cliente = ?,  correo_cliente = ?, nombre_cliente = ? \n" +
+                            "WHERE id_empleado = ? "
+                } else {
+                    "INSERT INTO empleados\n" +
+                            "(apellido_cliente, correo_cliente, nombre_cliente)\n" +
+                            "VALUES(?, ?, ?)\n"
+                }
+                connectDB?.prepareStatement(insertSQLEmpleado)?.apply {
+                    setString(1, t.apellido)
+                    setString(2, t.correo)
+                    setString(3, t.nombre)
+                    if (t.id != null) {
+                        setLong(4, t.id!!)
+                    }
+                }?.executeUpdate()!! > 0
+            } else {
+                false
+            }
+        } catch (ex: SQLException) {
+            ex.printStackTrace()
+            false
+        } finally {
+            cierreComando()
+        }
     }
 
     override fun eliminaEmpleado(id: Long): Boolean {
-        TODO("Not yet implemented")
+        val sqlDeleteEmpleado = "DELETE FROM empleados\n" +
+                "WHERE id_empleado = ? \n"
+
+        return false
     }
 
     private fun cierreComando() {

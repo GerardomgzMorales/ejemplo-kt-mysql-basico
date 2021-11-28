@@ -11,6 +11,10 @@ class EjemploJDBC {
             val repoDAO: IRepositorioEmpleado<Empleado> = RepositorioEmpleadoImpl()
             repoDAO.listadoEmpleados()?.forEach { p -> println("$p") }
             println("\n${repoDAO.buscarEmpleado(1)}")
+
+            //println("\nSe inserto o update: ${repoDAO.guardar(Empleado(1, "Jose Israel", "Gómez Zacatecas", "ji@gmail.com"))}")
+
+
         }
     }
 }
