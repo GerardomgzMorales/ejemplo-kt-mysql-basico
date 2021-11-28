@@ -17,7 +17,7 @@ class EjemploJDBC {
                 println("\nHola hay una connexion con exito\n")
                 resultado = stmt?.executeQuery("SELECT * FROM  empleados")
                 while (resultado?.next() == true) {
-                    val empleo: Empleo = Empleo()
+                    val empleo = Empleo()
 
                     empleo.correo = resultado.getString(
                         "correo_cliente"
@@ -31,8 +31,6 @@ class EjemploJDBC {
                     empleo.apellido = resultado.getString("apellido_cliente")
 
                     println("$empleo")
-
-
                 }
             } catch (ex: SQLException) {
                 ex.printStackTrace()
