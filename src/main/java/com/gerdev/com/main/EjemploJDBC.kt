@@ -9,10 +9,12 @@ class EjemploJDBC {
         @JvmStatic
         fun connexionBDMaria() {
             val repoDAO: IRepositorioEmpleado<Empleado> = RepositorioEmpleadoImpl()
-            repoDAO.listadoEmpleados()?.forEach { p -> println("$p") }
-            println("\n${repoDAO.buscarEmpleado(1)}")
 
-            //println("\nSe inserto o update: ${repoDAO.guardar(Empleado(1, "Jose Israel", "Gómez Zacatecas", "ji@gmail.com"))}")
+            repoDAO.listadoEmpleados()?.forEach { p -> println("\n$p") }
+            println("\n${repoDAO.buscarEmpleado(2) ?: "No hay usuario en esta BD con el id ingresado"}")
+
+            //println("\nSe inserto o update: ${repoDAO.guardar(Empleado(null, "Jose Chato", " Zacatecas", "85858@gmail.com"))}")
+            //println(repoDAO.eliminaEmpleado(2))
 
 
         }

@@ -1,5 +1,14 @@
 package com.gerdev.com.model
 
-data class Empleado(var id: Long?, var nombre: String?, var apellido: String?, var correo: String?) {
-    constructor() : this(null, null, null, null)
+import java.util.*
+
+data class Empleado(
+    var id: Long?,
+    var nombre: String?,
+    var apellido: String?,
+    var correo: String?,
+    var fechaRegistro: Date?,
+    var idAreaTrabajo: AreaTrabajo?
+) {
+    constructor() : this(null, null, null, null, null, null)
 }
