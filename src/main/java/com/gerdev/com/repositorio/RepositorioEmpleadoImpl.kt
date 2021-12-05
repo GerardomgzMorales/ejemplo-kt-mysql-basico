@@ -65,16 +65,18 @@ class RepositorioEmpleadoImpl : IRepositorioEmpleado<Empleado> {
         return try {
             if (t != null) {
                 insertSQLEmpleado = if (t.id != null) {
-                    "UPDATE empleados\n" + "SET apellido_cliente = ?,  correo_cliente = ?, nombre_cliente = ? \n" + "WHERE id_empleado = ? "
+                    "UPDATE empleados SET nombre_empleado = ?, apelldios_empleado = ?, correo_empleado = ?, fecha_registro = ?, id_area_trabajo = ? WHERE id_empleado = ?"
                 } else {
-                    "INSERT INTO empleados\n" + "(apellido_cliente, correo_cliente, nombre_cliente)\n" + "VALUES(?, ?, ?)\n"
+                    "INSERT INTO empleados (nombre_empleado, apelldios_empleado, correo_empleado, fecha_registro, id_area_trabajo) VALUES(?, ?, ?, ?, ?)\n"
                 }
                 connectDB?.prepareStatement(insertSQLEmpleado)?.apply {
-                    setString(1, t.apellido)
-                    setString(2, t.correo)
-                    setString(3, t.nombre)
+                    setString(1, t.nombre)
+                    setString(2, t.apellido)
+                    setString(3, t.correo)
+                    setDate(4, t.fechaRegistro?.let { Date(it.time) })
+                    t.idAreaTrabajo?.id?.let { setLong(5, it) }
                     if (t.id != null) {
-                        setLong(4, t.id!!)
+                        t.id?.let { setLong(6, it) }
                     }
                 }?.executeUpdate()!! > 0
             } else {
@@ -82,6 +84,7 @@ class RepositorioEmpleadoImpl : IRepositorioEmpleado<Empleado> {
             }
         } catch (ex: SQLException) {
             ex.printStackTrace()
+            println(ex.message)
             false
         } finally {
             cierreComando()
@@ -89,13 +92,12 @@ class RepositorioEmpleadoImpl : IRepositorioEmpleado<Empleado> {
     }
 
     override fun eliminaEmpleado(id: Long): Boolean {
-        val sqlDeleteEmpleado = "DELETE FROM empleados\n" + "WHERE id_empleado = ? \n"
+        val sqlDeleteEmpleado = "DELETE FROM empleados WHERE id_empleado = ?"
         return try {
             connectDB?.prepareStatement(sqlDeleteEmpleado)?.apply {
                 setLong(1, id)
                 executeUpdate()
-            }
-            true
+            }?.executeUpdate()!! > 0
         } catch (ex: SQLException) {
             ex.printStackTrace()
             println(ex.message)
